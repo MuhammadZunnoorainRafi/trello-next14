@@ -5,7 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import Footer from '@/components/shared/Footer';
 import Navbar from '@/components/shared/Navbar';
 import { ThemeProvider } from '@/lib/ThemeProvider';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,7 +34,7 @@ export default function RootLayout({
               <main className="flex-grow">{children}</main>
               <Footer />
             </div>
-            <Toaster />
+            <Toaster richColors={true} />
           </ThemeProvider>
         </SessionProvider>
       </body>

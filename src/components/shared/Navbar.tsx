@@ -9,7 +9,9 @@ async function Navbar() {
   const user = await getUserServer();
   return (
     <div className="px-10 shadow-md py-5 flex items-center justify-between">
-      <h1 className="font-bold text-2xl">🏠 Hotel</h1>
+      <Link href="/" className="font-bold text-2xl">
+        ⏹️ Trello
+      </Link>
 
       <div className="flex items-center justify-center gap-1">
         <ThemeToggle />

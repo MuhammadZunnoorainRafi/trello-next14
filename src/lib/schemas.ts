@@ -17,12 +17,6 @@ export const RegSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-export const HotelSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  image: z.string().min(1, 'Image is required'),
-  country: z.string().min(1, 'Country is required'),
-  state: z.string().min(1, 'State is required'),
-  city: z.string().min(1, 'City is required'),
-  facilities: z.array(z.string()).min(1, 'Select atleast one facility'),
+export const OrgSchema = z.object({
+  name: z.string().min(1, 'Enter organization name'),
 });
