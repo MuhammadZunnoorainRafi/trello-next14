@@ -20,3 +20,7 @@ export const RegSchema = z.object({
 export const OrgSchema = z.object({
   name: z.string().min(1, 'Enter organization name'),
 });
+
+export const BoardSchema = z.object({
+  name: z.string().min(1, 'Enter organization name'),
+});

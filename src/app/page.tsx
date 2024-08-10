@@ -1,4 +1,6 @@
-import { CreateOrgForm } from '@/components/forms/CreateOrg';
+import { CreateOrgForm } from '@/components/forms/CreateOrgForm';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -9,8 +11,11 @@ export default function Home() {
             Trello Clone
           </h1>
         </div>
-        <div>
+        <div className="flex items-center justify-center gap-2">
           <CreateOrgForm />
+          <Button asChild>
+            <Link href={'/organization'}>Organizations</Link>
+          </Button>
         </div>
       </div>
     </div>
