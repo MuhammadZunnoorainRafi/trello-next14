@@ -3,18 +3,18 @@
 import { getUserServer } from '@/hooks/getUserServert';
 import db from '@/lib/db';
 import { ListSchema } from '@/lib/schemas';
-import { ListType } from '@/lib/types';
+import { ListType, ListWithCardsType } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
-export const action_createList = async (
+export const action_updateList = async (
   formData: ListType,
-  boardId: string
+  boardId: string,
+  listId: string
 ) => {
   const user = await getUserServer();
   if (!user || !user.id) {
     return { error: 'User not found' };
   }
-
   const validations = ListSchema.safeParse(formData);
   if (!validations.success) {
     return { error: 'Invalid fields' };
@@ -22,20 +22,15 @@ export const action_createList = async (
 
   const { title } = validations.data;
 
-  const lastList = await db.list.findFirst({
-    where: { boardId },
-    select: { position: true },
-    orderBy: { position: 'desc' },
-  });
-
-  const currentPosition = lastList ? lastList.position + 1 : 1;
-
   try {
-    await db.list.create({
-      data: { title, boardId, position: currentPosition },
+    await db.list.update({
+      where: {
+        id: listId,
+      },
+      data: { title },
     });
     revalidatePath(`/board/${boardId}`);
-    return { success: `List "${title}" added` };
+    return { success: `List "${title}" updated` };
   } catch (error) {
     console.log(error);
     return { error: 'Internal server error' };
