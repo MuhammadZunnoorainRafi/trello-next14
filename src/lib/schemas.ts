@@ -22,5 +22,14 @@ export const OrgSchema = z.object({
 });
 
 export const BoardSchema = z.object({
-  name: z.string().min(1, 'Enter organization name'),
+  name: z.string().min(1, 'Enter board name'),
+});
+
+export const ListSchema = z.object({
+  title: z.string().min(1, 'Enter list title'),
+});
+
+export const CardSchema = z.object({
+  title: z.string().min(1, 'Enter card title'),
+  description: z.string().min(1, 'Enter card description'),
 });

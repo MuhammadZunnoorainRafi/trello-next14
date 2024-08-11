@@ -30,4 +30,23 @@ model Board {
   name           String
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
+  List           List[]
+}
+
+model List {
+  id       String @id @default(uuid())
+  title    String
+  position Int
+  boardId  String
+  board    Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards    Card[]
+}
+
+model Card {
+  id          String  @id @default(uuid())
+  title       String
+  description String? @db.Text
+  position    Int
+  listId      String
+  list        List    @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
