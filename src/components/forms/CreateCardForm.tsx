@@ -1,10 +1,12 @@
 'use client';
 
-import { action_createList } from '@/actions/list/create-list';
-import { action_updateList } from '@/actions/list/update-list';
-import { ListSchema } from '@/lib/schemas';
-import { ListType, ListWithCardsType } from '@/lib/types';
+import { action_createCard } from '@/actions/card/create-card';
+import { action_deleteCard } from '@/actions/card/delete-card';
+import { action_updateCard } from '@/actions/card/update-card';
+import { CardSchema } from '@/lib/schemas';
+import { CardType } from '@/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Card } from '@prisma/client';
 import { Cross1Icon, CrossCircledIcon, PlusIcon } from '@radix-ui/react-icons';
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -20,20 +22,41 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { action_deleteList } from '@/actions/list/delete-list';
 
 type Props = {
+  data?: Card;
   boardId: string;
-  data?: ListWithCardsType;
+  listId: string;
 };
-function CreateListForm({ boardId, data }: Props) {
+
+function CreateCardForm({ data, boardId, listId }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<ListType>({
-    defaultValues: { title: '' },
-    resolver: zodResolver(ListSchema),
+  const form = useForm<CardType>({
+    resolver: zodResolver(CardSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+    },
   });
+
+  const formSubmit = (formData: CardType) => {
+    startTransition(async () => {
+      const res = data
+        ? await action_updateCard(formData, boardId, data.id)
+        : await action_createCard(formData, boardId, listId);
+      if (res.success) {
+        toast.success(res.success);
+      }
+
+      if (res.error) {
+        toast.error(res.error);
+      }
+      disableEditing();
+      form.reset();
+    });
+  };
 
   useEffect(() => {
     if (data) {
@@ -56,27 +79,10 @@ function CreateListForm({ boardId, data }: Props) {
   };
   document.addEventListener('keydown', onKeyDown);
 
-  const formSubmit = (formData: ListType) => {
-    startTransition(async () => {
-      const res = data
-        ? await action_updateList(formData, boardId, data.id)
-        : await action_createList(formData, boardId);
-      if (res.success) {
-        toast.success(res.success);
-      }
-
-      if (res.error) {
-        toast.error(res.error);
-      }
-      disableEditing();
-      form.reset();
-    });
-  };
-
   const handleDelete = () => {
     if (data) {
       startTransition(async () => {
-        const res = await action_deleteList(data.id);
+        const res = await action_deleteCard(data.id, boardId);
         if (res.success) {
           toast.success(res.success);
         }
@@ -101,13 +107,31 @@ function CreateListForm({ boardId, data }: Props) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  {!data && <FormLabel>Title</FormLabel>}
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
                       className="text-sm font-medium transition"
                       placeholder="Enter list title..."
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      {...field}
+                      className="text-sm font-medium transition"
+                      placeholder="Enter list description..."
                     />
                   </FormControl>
                   <FormMessage />
@@ -139,29 +163,32 @@ function CreateListForm({ boardId, data }: Props) {
 
   return (
     <ListWrapper>
-      <button
+      <div
         onClick={enableEditing}
         className="group w-full rounded-md bg-black/80 hover:bg-black/50 transition p-3 flex items-center font-medium text-sm"
       >
         {data ? (
-          <p className="flex items-center w-full text-start">
-            <span className="flex-1">{data.title}</span>
+          <div className="flex items-center w-full text-start">
+            <div className="flex-1">
+              <h1 className="font-semibold text-slate-50">{data.title}</h1>
+              <p className="text-sm text-slate-200">{data.description}</p>
+            </div>
             <span
               onClick={handleDelete}
               className="flex-0 group-hover:inline-block hidden "
             >
               <CrossCircledIcon className="h-4 w-4 hover:scale-110 hover:text-red-500 duration-200" />
             </span>
-          </p>
+          </div>
         ) : (
           <>
             <PlusIcon className="w-4 h-4 mr-2" />
-            Add a List
+            Add a Card
           </>
         )}
-      </button>
+      </div>
     </ListWrapper>
   );
 }
 
-export default CreateListForm;
+export default CreateCardForm;

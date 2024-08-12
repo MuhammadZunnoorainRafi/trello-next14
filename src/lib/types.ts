@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   BoardSchema,
+  CardSchema,
   ListSchema,
   LogSchema,
   OrgSchema,
@@ -18,6 +19,7 @@ export type UserType = RegType & {
 export type OrgType = z.infer<typeof OrgSchema>;
 export type BoardType = z.infer<typeof BoardSchema>;
 export type ListType = z.infer<typeof ListSchema>;
+export type CardType = z.infer<typeof CardSchema>;
 
 export type ListWithCardsType = List & { cards: Card[] };
 export type CardWithListType = Card & { list: List };
