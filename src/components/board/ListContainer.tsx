@@ -1,11 +1,12 @@
 'use client';
+import { action_updateCardOrder } from '@/actions/card/udpate-card-order';
+import { action_updateListOrder } from '@/actions/list/update-list-order';
 import { ListWithCardsType } from '@/lib/types';
-import React, { useEffect, useState } from 'react';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import CreateListForm from '../forms/CreateListForm';
 import ListItem from './ListItem';
-import { DragDropContext, Droppable } from '@hello-pangea/dnd';
-import { action_updateListOrder } from '@/actions/list/update-list-order';
-import { toast } from 'sonner';
 
 type Props = {
   boardId: string;
@@ -50,7 +51,7 @@ function ListContainer({ boardId, data }: Props) {
         destination.index
       ).map((listItem, index) => ({ ...listItem, position: index }));
       setOrderedData(listItems);
-      // TODO: Trigger server action
+
       const resUpdateList = await action_updateListOrder(listItems, boardId);
       if (resUpdateList.success) {
         toast.success(resUpdateList.success);
@@ -97,7 +98,18 @@ function ListContainer({ boardId, data }: Props) {
         });
         sourceList.cards = reorderedCards;
         setOrderedData(newOrderedData);
-        // TODO: Trigger server action
+
+        const resUpdateCard = await action_updateCardOrder(
+          sourceList.cards,
+          boardId
+        );
+
+        if (resUpdateCard.success) {
+          toast.success(resUpdateCard.success);
+        }
+        if (resUpdateCard.error) {
+          toast.error(resUpdateCard.error);
+        }
 
         // User moves the card to another list
       } else {
@@ -120,6 +132,17 @@ function ListContainer({ boardId, data }: Props) {
         });
 
         // TODO: Trigger server action
+        const resUpdateCard = await action_updateCardOrder(
+          destinationList.cards,
+          boardId
+        );
+
+        if (resUpdateCard.success) {
+          toast.success(resUpdateCard.success);
+        }
+        if (resUpdateCard.error) {
+          toast.error(resUpdateCard.error);
+        }
       }
     }
   };

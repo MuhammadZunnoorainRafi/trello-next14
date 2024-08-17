@@ -42,3 +42,13 @@ export const CardSchema = z.object({
   title: z.string().min(1, 'Enter card title'),
   description: z.string().min(1, 'Enter card description'),
 });
+
+export const UpdateCardSchema = z.array(
+  z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.any(),
+    position: z.number(),
+    listId: z.string(),
+  })
+);
