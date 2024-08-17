@@ -6,6 +6,7 @@ import {
   LogSchema,
   OrgSchema,
   RegSchema,
+  UpdateListSchema,
 } from './schemas';
 import { Card, List } from '@prisma/client';
 
@@ -19,6 +20,7 @@ export type UserType = RegType & {
 export type OrgType = z.infer<typeof OrgSchema>;
 export type BoardType = z.infer<typeof BoardSchema>;
 export type ListType = z.infer<typeof ListSchema>;
+export type UpdateListOrderType = z.infer<typeof UpdateListSchema>;
 export type CardType = z.infer<typeof CardSchema>;
 
 export type ListWithCardsType = List & { cards: Card[] };

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import CreateListForm from '../forms/CreateListForm';
 import ListItem from './ListItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+import { action_updateListOrder } from '@/actions/list/update-list-order';
+import { toast } from 'sonner';
 
 type Props = {
   boardId: string;
@@ -25,7 +27,7 @@ function ListContainer({ boardId, data }: Props) {
     setOrderedData(data);
   }, [data]);
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = async (result: any) => {
     const { destination, source, type } = result;
 
     if (!destination) {
@@ -49,6 +51,13 @@ function ListContainer({ boardId, data }: Props) {
       ).map((listItem, index) => ({ ...listItem, position: index }));
       setOrderedData(listItems);
       // TODO: Trigger server action
+      const resUpdateList = await action_updateListOrder(listItems, boardId);
+      if (resUpdateList.success) {
+        toast.success(resUpdateList.success);
+      }
+      if (resUpdateList.error) {
+        toast.error(resUpdateList.error);
+      }
     }
 
     // User moves a card

@@ -29,6 +29,15 @@ export const ListSchema = z.object({
   title: z.string().min(1, 'Enter list title'),
 });
 
+export const UpdateListSchema = z.array(
+  z.object({
+    id: z.string(),
+    title: z.string(),
+    position: z.number(),
+    boardId: z.string(),
+  })
+);
+
 export const CardSchema = z.object({
   title: z.string().min(1, 'Enter card title'),
   description: z.string().min(1, 'Enter card description'),
