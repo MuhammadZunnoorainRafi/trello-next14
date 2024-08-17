@@ -8,11 +8,7 @@ type Props = {
 };
 
 function ListHeader({ data }: Props) {
-  return (
-    <div>
-      <CreateListForm boardId={data.boardId} data={data} />
-    </div>
-  );
+  return <CreateListForm boardId={data.boardId} data={data} />;
 }
 
 export default ListHeader;

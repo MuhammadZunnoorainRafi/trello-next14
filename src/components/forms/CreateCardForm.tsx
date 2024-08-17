@@ -60,7 +60,10 @@ function CreateCardForm({ data, boardId, listId }: Props) {
 
   useEffect(() => {
     if (data) {
-      form.reset({ title: data.title });
+      form.reset({
+        title: data.title,
+        description: data.description ? data.description : '',
+      });
     }
   }, [data, form]);
 
@@ -165,7 +168,7 @@ function CreateCardForm({ data, boardId, listId }: Props) {
     <ListWrapper>
       <div
         onClick={enableEditing}
-        className="group w-full rounded-md bg-black/80 hover:bg-black/50 transition p-3 flex items-center font-medium text-sm"
+        className="group w-full cursor-pointer rounded-md bg-black/40 hover:bg-black/30 transition p-3 flex items-center font-medium text-sm"
       >
         {data ? (
           <div className="flex items-center w-full text-start">
